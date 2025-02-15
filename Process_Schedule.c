@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include<conio.h>
-#include<windows.h>
+//#include<conio.h>
+//#include<windows.h>
 
 typedef struct process process;
      struct process {
@@ -27,10 +27,9 @@ void diag_grantt(process *p);
 process* copy_process(process *p);
 void parcourt(process *p , int q);
 void algo_RR () ;
- void RR_process(process *p);
- int get_positive_int(const char* prompt);
- void cleanup_processes(process* p) ;
-
+int get_positive_int(const char* prompt);
+void cleanup_processes(process* p) ;
+void tri_process_f(process *p);
 //--------------------------------------------------
 void reset ();
 //---------------------------------------------------------main prog:
@@ -116,7 +115,7 @@ int get_positive_int(const char* prompt) {
             printf("Invalid input. Please enter a positive integer.\n");
             while (getchar() != '\n');  // Clear input buffer
         }
-    } while (value <= 0);
+    } while (value < 0);
     return value;
 }
 
@@ -131,8 +130,8 @@ process* Saisie_process(){
     p->PID = 0;
     system("color");
     printf("\033[0;34m");
-    p->TA = get_positive_int("Veuillez saisir le temps d'arrivee de processus : ");
-    p->TE = get_positive_int("Veuillez saisir le temps d'Execution de processus : ");
+    p->TA = get_positive_int("Veuillez saisir le temps d'arrivee de processus 0: ");
+    p->TE = get_positive_int("Veuillez saisir le temps d'Execution de processus 0: ");
     p->next=NULL;
      int i = 1;
      temp=p;
@@ -141,9 +140,9 @@ process* Saisie_process(){
     nv->PID = i;
     system("color");
     printf("\033[0;34m");
-    printf("  Veuillez saisir le temps d'arrivee de processus: ");
+    printf("  Veuillez saisir le temps d'arrivee de processus %d: ",i);
     scanf("%d",&(nv->TA));
-    printf("  Veuillez saisir le temps d'execution de processus: ");
+    printf("  Veuillez saisir le temps dexecution de processus %d: ",i);
     scanf("%d",&(nv->TE));
     printf("\033[0m");
     nv->next=NULL;
@@ -160,7 +159,7 @@ process* Saisie_process(){
 //----------------------------------------------------------------------------------------------
 
 void affichage_process(process *p){
-    printf("\033[0;32m");
+   printf("\033[0;32m");
    printf ("  +--------------------------------------------------+\n");
    reset();
    printf ("  |  PID  |  temps d'arrivee   |   Temps d'execution |\n");
@@ -370,19 +369,19 @@ void RR_process(process *p)
       else
         if((d->TE)>=Q)
         {
-          printf("|  P%d (2s)  |",d->PID);
+          printf("|  P%d (2 units)  |",d->PID);
           d->tta=d->tta+Q;
           d->TE=(d->TE)-Q;
          parcourt(d , Q);
-          tri_process_f(d);
+         tri_process_f(d);
          }
       else if ((d->TE)<Q)
         {
-         printf("|  P%d (1s) |",d->PID);
+         printf("|  P%d (1 unit) |",d->PID);
          d->tta=d->tta+d->TE;
          parcourt(d ,d->TE );
           d->TE=0;
-          tri_process_f(d);
+         tri_process_f(d);
       };
     };
     d=q;
@@ -403,6 +402,7 @@ void RR_process(process *p)
               printf("                                   Le temps d'attente moyen est : %f\n\n",ta);
                reset();
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 void parcourt(process *p , int q)
 {
     process *d=p;
@@ -414,6 +414,7 @@ void parcourt(process *p , int q)
        d=d->next;
     };
 }
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------
 void algo_RR ()
 
 {      system("cls()");
@@ -481,3 +482,4 @@ if(temp[i] <= quant && temp[i] > 0)
     }
 }}
 //--------------------------------------------------------------------------------------------------------
+
